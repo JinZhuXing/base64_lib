@@ -1,0 +1,8 @@
+_intermediate
+bin
+lib
+obj
+.vs
+*.aps
+*.user
+*.bin
