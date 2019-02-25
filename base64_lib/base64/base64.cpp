@@ -84,7 +84,8 @@ int base64_decode(unsigned char *p_pSrcBase64, unsigned int p_nSrcLen, unsigned 
 	{
 		w_pCharArray_4[i++] = p_pSrcBase64[in_];
 		in_++;
-		if (i == 4) {
+		if (i == 4)
+		{
 			for (i = 0; i < 4; i++)
 				w_pCharArray_4[i] = findidx_base64(w_pCharArray_4[i]);
 
@@ -151,11 +152,35 @@ int base64_decode_size(unsigned char *p_pSrcBase64, unsigned int p_nSrcLen, unsi
 	return RT_BASE64_OK;
 }
 
+int base64_check_encoded_file(unsigned char *p_pSrcBase64, unsigned int *p_nSrcLen)
+{
+	unsigned int i;
+	unsigned int w_nSrcLen;
+
+	// check parameter
+	if ((p_pSrcBase64 == 0) || (p_nSrcLen == 0))
+		return RT_BASE64_INVALID_PARAM;
+
+	w_nSrcLen = *p_nSrcLen;
+	for (i = 0; i < w_nSrcLen; i++)
+	{
+		if (!is_base64(p_pSrcBase64[i]))
+		{
+			if ((p_pSrcBase64[i] == '\r') || (p_pSrcBase64[i] == '\n') || (p_pSrcBase64[i] == 0))
+				break;
+			return RT_BASE64_FAIL;
+		}
+	}
+	*p_nSrcLen = i;
+
+	return RT_BASE64_OK;
+}
+
 
 // private functions --------------------------------------------------
 bool is_base64(unsigned char p_nChar)
 {
-	if ((p_nChar == '+') || (p_nChar == '/'))
+	if ((p_nChar == '+') || (p_nChar == '/') || (p_nChar == '='))
 		return true;
 
 	if ((p_nChar >= 'A') && (p_nChar <= 'Z'))
