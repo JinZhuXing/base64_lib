@@ -20,9 +20,16 @@ int main()
 	int i;
 
 	// read base64
-	w_nSrcLen = sizeof(g_szSampleBase64) - 1;
+	w_nSrcLen = sizeof(g_szSampleBase64);
 	w_pSrcBase64 = new unsigned char[w_nSrcLen];
 	memcpy(w_pSrcBase64, g_szSampleBase64, w_nSrcLen);
+
+	// check base64 data
+	if (base64_check_encoded_file(w_pSrcBase64, &w_nSrcLen) != RT_BASE64_OK)
+	{
+		printf_s("This text is not base64 data\r\n");
+		return 1;
+	}
 
 	// get real data
 	base64_decode_size(w_pSrcBase64, w_nSrcLen, &w_nDstLen);
